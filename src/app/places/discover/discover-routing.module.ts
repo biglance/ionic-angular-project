@@ -8,14 +8,14 @@ const routes: Routes = [
     path: '',
     component: DiscoverPage
   },
-  {
-    path: 'offers',
-    loadChildren: () => import('./offers/offers.module').then( m => m.OffersPageModule)
-  },
-  {
-    path: 'place-detail',
-    loadChildren: () => import('./place-detail/place-detail.module').then( m => m.PlaceDetailPageModule)
-  }
+  // {
+  //   path: 'offers',
+  //   loadChildren: () => import('./offers/offers.module').then( m => m.OffersPageModule)
+  // },
+  // {
+  //   path: 'place-detail',
+  //   loadChildren: () => import('./place-detail/place-detail.module').then( m => m.PlaceDetailPageModule)
+  // }
 ];
 
 @NgModule({
