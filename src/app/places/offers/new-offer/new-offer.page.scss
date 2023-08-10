@@ -1,0 +1,4 @@
+//to fix popover size in iOS
+.popover-datetime::part(content) {
+  width: 80vw !important;
+}

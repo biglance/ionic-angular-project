@@ -10,6 +10,52 @@
 </ion-header>
 
 <ion-content class="ion-text-center ion-padding">
-  <p>{{ selectedPlace.description }}</p>
-  <ion-button color="primary" (click)="onBookPlace()">Book!</ion-button>
+  <form (ngSubmit)="onBookPlace()" #f="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col sizeSm="6" offsetSm="3">
+          <ion-item>
+            <ion-input type="text" label="First Name" labelPlacement="floating" ngModel name="first-name" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeSm="6" offsetSm="3">
+          <ion-item>
+            <ion-input type="text" label="Last Name" labelPlacement="floating" ngModel name="last-name" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeSm="6" offsetSm="3">
+          <ion-item>
+            <ion-select type="text" label="Number of Guests" labelPlacement="floating" [ngModel]="'2'" name="guest-number" required>
+              <ion-select-option value="1">1</ion-select-option>
+              <ion-select-option value="2">2</ion-select-option>
+              <ion-select-option value="3">3</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeSm="3" offsetSm="3">
+          <ion-item>
+            <ion-input type="date" label="From" labelPlacement="floating" [ngModel]="formattedStartDate" name="date-from" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeSm="3">
+          <ion-item>
+            <ion-input type="date" label="To" labelPlacement="floating" [ngModel]="formattedEndDate" name="date-to" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeSm="6" offsetSm="3">
+          <ion-button type="submit" color="primary" expand="block" [disabled]="!f.valid || !datesValid()"> Book!</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

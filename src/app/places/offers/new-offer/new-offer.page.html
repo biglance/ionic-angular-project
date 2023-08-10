@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>New Offer</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="onCreateOffer()">
+      <ion-button (click)="onCreateOffer()" [disabled]="!form.valid">
         <ion-icon name="checkmark" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -13,49 +13,93 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col sizeSm="6" offsetSm="3">
-        <ion-item>
-          <ion-input
-              type="text"
-              label="Title"
-              labelPlacement="floating"
-              ngModel
-              name="title"
-              required
-              >
-          </ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col sizeSm="6" offsetSm="3">
-        <ion-item>
-          <ion-textarea label="Short description" labelPlacement="floating" rows="3"></ion-textarea>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col sizeSm="6" offsetSm="3">
-        <ion-item>
-          <ion-input type="number" label="Price" labelPlacement="floating"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col sizeSm="6" offsetSm="3">
-        <ion-item>
-          <ion-label position="floating">Available from</ion-label>
-          <ion-datetime min="2022-01-01" max="2025-12-31"></ion-datetime>
-        </ion-item>
-      </ion-col>
-      <ion-col sizeSm="6">
-        <ion-item>
-          <ion-label position="floating">Available to</ion-label>
-          <ion-datetime min="2022-01-02" max="2025-12-31"></ion-datetime>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col sizeSm="6" offsetSm="3">
+          <ion-item>
+            <ion-input
+                type="text"
+                label="Title"
+                labelPlacement="floating"
+                autocomplete
+                autocorrect
+                formControlName="title"
+                >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeSm="6" offsetSm="3">
+          <ion-item>
+            <ion-textarea label="Short description" labelPlacement="floating" rows="3" formControlName="description"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!form.get('description').valid && form.get('description').touched">
+        <ion-col sizeSm="6" offsetSm="3">
+          <p>Description must not be longer than 180 characters.</p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col sizeSm="6" offsetSm="3">
+          <ion-item>
+            <ion-input type="number" label="Price" labelPlacement="floating" formControlName="price"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-input type="date" label="Available from" labelPlacement="floating" formControlName="dateFrom"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size-sm="3">
+          <ion-item>
+            <ion-input type="date" label="Available to" labelPlacement="floating" formControlName="dateTo"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item button="true" id="first-datepicker" detail="false">
+            <ion-input label="Available from" labelPlacement="floating" [value]="form.controls['dateFrom'].value | date:'dd/MM/yyyy'"></ion-input>
+            <ion-popover trigger="first-datepicker" class="popover-datetime" showBackdrop="false">
+              <ng-template >
+                <ion-datetime
+                min="2019-01-01"
+                max="2025-12-31"
+                presentation="date"
+                formControlName="dateFrom"
+                #dateFromPopover
+                (ionChange)="dateFromPopover.confirm(true);"
+                >
+              </ion-datetime>
+
+              </ng-template>
+            </ion-popover>
+          </ion-item>
+        </ion-col>
+        <ion-col size-sm="3" >
+          <ion-item button="true" id="second-datepicker" detail="false">
+            <ion-input label="Available to" labelPlacement="floating" [value]="form.controls['dateTo'].value | date:'dd/MM/yyyy'"></ion-input>
+            <ion-popover trigger="second-datepicker" class="popover-datetime" showBackdrop="false">
+              <ng-template >
+                <ion-datetime
+                min="2019-01-02"
+                max="2025-12-31"
+                presentation="date"
+                #dateTopopover
+                formControlName="dateTo"
+                (ionChange)="dateTopopover.confirm(true);">
+              </ion-datetime>
+
+              </ng-template>
+            </ion-popover>
+          </ion-item>
+        </ion-col>
+      </ion-row> -->
+    </ion-grid>
+  </form>
 </ion-content>
