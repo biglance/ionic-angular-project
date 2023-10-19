@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
+import { Plugins, Capacitor } from '@capacitor/core';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +12,15 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private platform: Platform, private authService: AuthService, private router: Router) { }
+
+  initializeApp() {
+    this.platform.ready().then(async () => {
+      if (Capacitor.isPluginAvailable('SplashScreen')) {
+        await SplashScreen.hide();
+      }
+    })
+  }
 
   onLogout() {
     this.authService.logout();
