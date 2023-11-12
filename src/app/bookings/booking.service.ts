@@ -39,18 +39,12 @@ export class BookingService {
     dateTo: Date
   ) {
     let generatedId: string;
-    const newBooking = new Booking(
-      Math.random().toString(),
-      placeId,
-      this.authService.UserId,
-      placeTitle,
-      placeImage,
-      firstName,
-      lastName,
-      guestNumber,
-      dateFrom,
-      dateTo
-    );
+    this.authService.UserId.pipe(take(1)).subscribe(userId => {
+      if (!userId) {
+        return;
+      }
+    })
+    
     return this.http
       .post<{ name: string }>(
         'https://ionic-angular-5a539-default-rtdb.firebaseio.com/bookings.json',

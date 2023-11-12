@@ -48,7 +48,7 @@ export class PlacesService {
                   new Date(resData[key].availableFrom),
                   new Date(resData[key].availableTo),
                   resData[key].userId,
-                  resData[key].location,
+                  resData[key].location
                 )
               );
             }
@@ -84,20 +84,31 @@ export class PlacesService {
       );
   }
 
+  uploadImage(image: File) {
+    const uploadData = new FormData();
+    uploadData.append('image', image);
+
+    return this.http.post<{ imageUrl: string; imagePath: string }>(
+      'https://us-central1-ionic-angular-5a539.cloudfunctions.net/storeImage',
+      uploadData
+    );
+  }
+
   addPlace(
     title: string,
     description: string,
     price: number,
     dateFrom: Date,
     dateTo: Date,
-    location: PlaceLocation
+    location: PlaceLocation,
+    imageUrl: string
   ) {
     let generatedId: string;
     const newPlace = new Place(
       Math.random().toString(),
       title,
       description,
-      'https://www.luxuryrestaurantawards.com/wp-content/uploads/sites/9/2022/01/CBC_Pool_6-scaled.jpg',
+      imageUrl,
       price,
       dateFrom,
       dateTo,
@@ -140,7 +151,7 @@ export class PlacesService {
           return of(places);
         }
       }),
-      switchMap(places => {
+      switchMap((places) => {
         const updatedPlaceIndex = places.findIndex((pl) => pl.id === placeId);
         updatedPlaces = [...places];
         const oldPlace = updatedPlaces[updatedPlaceIndex];
