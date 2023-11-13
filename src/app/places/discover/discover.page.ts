@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlacesService } from '../places.service';
 import { Place } from '../place.model';
 import { SegmentChangeEventDetail } from '@ionic/angular';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -35,14 +35,15 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   onFilterUpdate(event: Event) {
     const customEvent = event as CustomEvent<SegmentChangeEventDetail>;
-    console.log(customEvent.detail);
-    if (customEvent.detail.value === 'all') {
-      this.relevantPlaces = this.loadedPlaces;
-    } else if (customEvent.detail.value === 'bookable') {
-      this.relevantPlaces = this.loadedPlaces.filter(
-        place  => place.userId !== this.authService.UserId
-      );
-    }
+    this.authService.UserId.pipe(take(1)).subscribe(userId => {
+      if (customEvent.detail.value === 'all') {
+        this.relevantPlaces = this.loadedPlaces;
+      } else if (customEvent.detail.value === 'bookable') {
+        this.relevantPlaces = this.loadedPlaces.filter(
+          place  => place.userId !== userId
+        );
+      }
+    });
   }
 
   ngOnDestroy(): void {

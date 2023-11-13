@@ -10,7 +10,7 @@ import {
 import { PlacesService } from '../../places.service';
 import { Place } from '../../place.model';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap, take } from 'rxjs';
 import { BookingService } from '../../../bookings/booking.service';
 import { AuthService } from '../../../auth/auth.service';
 import { MapModalComponent } from '../../../shared/map-modal/map-modal.component';
@@ -46,33 +46,41 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         return;
       }
       this.isLoading = true;
-      this.placesSub = this.placesService
-        .getPlace(paramMap.get('placeId'))
-        .subscribe(
-          (place) => {
-            this.place = place;
-            this.isBookable = place.userId !== this.authService.UserId;
-            this.isLoading = false;
-          },
-          (error) => {
-            this.alertCtr
-              .create({
-                header: 'An error occured!',
-                message: 'Could not load place.',
-                buttons: [
-                  {
-                    text: 'Okay',
-                    handler: () => {
-                      this.router.navigate(['/places/tabs/discover']);
-                    },
-                  },
-                ],
-              })
-              .then((alertEl) => {
-                alertEl.present();
-              });
+      let fetchedUserId: string;
+      this.authService.UserId.pipe(
+        take(1),
+        switchMap((userId) => {
+          if (!userId) {
+            throw new Error('Found no user!');
           }
-        );
+          fetchedUserId = userId;
+          return this.placesService.getPlace(paramMap.get('placeId'));
+        })
+      ).subscribe(
+        (place) => {
+          this.place = place;
+          this.isBookable = place.userId !== fetchedUserId;
+          this.isLoading = false;
+        },
+        (error) => {
+          this.alertCtr
+            .create({
+              header: 'An error occured!',
+              message: 'Could not load place.',
+              buttons: [
+                {
+                  text: 'Okay',
+                  handler: () => {
+                    this.router.navigate(['/places/tabs/discover']);
+                  },
+                },
+              ],
+            })
+            .then((alertEl) => {
+              alertEl.present();
+            });
+        }
+      );
     });
   }
 
